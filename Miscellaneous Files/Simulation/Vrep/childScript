@@ -1,0 +1,44 @@
+function sysCall_init()
+    counter = 0
+    frequency = 4
+    a = 40                 --Amplitude Coeff                         
+    b = 1*math.pi          --Curve Coeff                               
+    c = 0               --Turn Coeff            
+    num_segments = 4       --Number of servos
+    gamma=-c/num_segments  
+    beta=b/num_segments
+    amplitude=a*math.abs(math.sin(beta/2))
+    servo_head=sim.getObjectHandle("Head_M")
+    servo_b1=sim.getObjectHandle("B1_M")
+    servo_b2=sim.getObjectHandle("B2_M")
+    servo_tail=sim.getObjectHandle("Tail_M")
+    sim.setJointTargetPosition(servo_head,0*math.pi/180)
+    sim.setJointPosition(servo_b1,0*math.pi/180)
+    sim.setJointPosition(servo_b2,0*math.pi/180)
+    sim.setJointPosition(servo_tail,0*math.pi/180)
+end
+
+function sysCall_actuation()
+    if ((counter<=360) and (counter>=0))
+    then
+        sim.setJointTargetPosition(servo_head,(amplitude*math.sin(frequency*counter*math.pi/180+0*beta)+gamma)*math.pi/180)
+        sim.setJointTargetPosition(servo_b1,(amplitude*math.sin(frequency*counter*math.pi/180+1*beta+math.pi/2)+gamma)*math.pi/180)
+        sim.setJointTargetPosition(servo_b2,(amplitude*math.sin(frequency*counter*math.pi/180+2*beta)+gamma)*math.pi/180)
+        sim.setJointTargetPosition(servo_tail,(amplitude*math.sin(frequency*counter*math.pi/180+3*beta+math.pi/2)+gamma)*math.pi/180)
+        counter=counter+1
+    end
+    if(counter>360)
+    then 
+        counter=0
+    end
+end
+
+function sysCall_sensing()
+    -- put your sensing code here
+end
+
+function sysCall_cleanup()
+    -- do some clean-up here
+end
+
+
